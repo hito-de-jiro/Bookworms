@@ -1,6 +1,8 @@
-from flask import Flask, render_template
+import connexion
+from flask import render_template
 
-app = Flask(__name__)
+app = connexion.App(__name__, specification_dir="./")
+app.add_api("swagger.yml")
 
 
 @app.route("/")

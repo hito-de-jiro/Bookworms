@@ -1,0 +1,104 @@
+openapi: 3.0.0
+info:
+  title: "Bookworm"
+  description: "digital library use REST API"
+  version: "1.0.0"
+
+servers:
+  - url: "/api"
+
+components:
+  schemas:
+    Author:
+      type: "object"
+      required:
+        - id_author
+      properties:
+        id_author:
+          type: "integer"
+        fname:
+          type: "string"
+        lname:
+          type: "string"
+        borne:
+          type: "string"
+        died:
+          type: "string"
+
+  parameters:
+    id_author:
+      name: "id_author"
+      description: "Id of the author to get"
+      in: path
+      required: True
+      schema:
+        type: "integer"
+
+paths:
+
+  /authors:
+    get:
+      operationId: "authors.read_all"
+      tags:
+        - Authors
+      summary: "Read the list of authors"
+      responses:
+        "200":
+          description: "Successfully read authors list"
+
+    post:
+      operationId: "authors.create"
+      tags:
+        - Authors
+      summary: "Create a author"
+      requestBody:
+        description: "Author to create"
+        required: True
+        content:
+          application/json:
+            schema:
+              x-body-name: "author"
+              $ref: "#/components/schemas/Author"
+      responses:
+        "201":
+          description: "Successfully created author"
+
+  /authors/{id_author}:
+    get:
+      operationId: "authors.read_one"
+      tags:
+        - Authors
+      summary: "Read one author"
+      parameters:
+        - $ref: "#/components/parameters/id_author"
+      responses:
+        "200":
+          description: "Successfully read author"
+
+    put:
+      tags:
+        - Authors
+      operationId: "authors.update"
+      summary: "Update a author"
+      parameters:
+        - $ref: "#/components/parameters/id_author"
+      responses:
+        "200":
+          description: "Successfully updated author"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              x-body-name: "author"
+              $ref: "#/components/schemas/Author"
+
+    delete:
+      tags:
+        - Authors
+      operationId: "authors.delete"
+      summary: "Delete a author"
+      parameters:
+        - $ref: "#/components/parameters/id_author"
+      responses:
+        "204":
+          description: "Successfully deleted author"
