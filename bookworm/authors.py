@@ -9,8 +9,8 @@ def get_timestamp():
 AUTHORS = {
     "Dumas": {
         "id_author": 1,
-        "fname": "Alexandre",
-        "lname": "Dumas",
+        "first_name": "Alexandre",
+        "last_name": "Dumas",
         "borne": "1802-07-24",
         "died": "1870-12-05",
         "books": "The Three Musketeers",
@@ -25,16 +25,16 @@ def read_all():
 
 def create(author):
     id_author = author.get("id_author")
-    lname = author.get("lname", "")
-    fname = author.get("fname", "")
+    last_name = author.get("last_name", "")
+    first_name = author.get("first_name", "")
     borne = author.get("borne", "")
     died = author.get("died", "")
 
     if id_author and id_author not in AUTHORS:
         AUTHORS[id_author] = {
             "id_author": id_author,
-            "lname": lname,
-            "fname": fname,
+            "last_name": last_name,
+            "first_name": first_name,
             "borne": borne,
             "died": died,
             "create": get_timestamp(),
@@ -58,8 +58,8 @@ def read_one(id_author):
 
 def update(id_author, person):
     if id_author in AUTHORS:
-        AUTHORS[id_author]["fname"] = person.get("fname", AUTHORS[id_author]["fname"])
-        AUTHORS[id_author]["lname"] = person.get("lname", AUTHORS[id_author]["lname"])
+        AUTHORS[id_author]["first_name"] = person.get("first_name", AUTHORS[id_author]["first_name"])
+        AUTHORS[id_author]["last_name"] = person.get("last_name", AUTHORS[id_author]["last_name"])
         AUTHORS[id_author]["borne"] = person.get("borne", AUTHORS[id_author]["borne"])
         AUTHORS[id_author]["died"] = person.get("died", AUTHORS[id_author]["died"])
         AUTHORS[id_author]["create"] = get_timestamp()
