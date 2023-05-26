@@ -1,45 +1,23 @@
 from flask import abort, make_response
-from datetime import datetime
 
-
-def get_timestamp():
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-
-AUTHORS = {
-    "Dumas": {
-        "id_author": 1,
-        "first_name": "Alexandre",
-        "last_name": "Dumas",
-        "borne": "1802-07-24",
-        "died": "1870-12-05",
-        "books": "The Three Musketeers",
-        "create": get_timestamp(),
-    }
-}
+from config import db
+from models import Author, author_schema, authors_schema
 
 
 def read_all():
-    return list(AUTHORS.values())
+    people = Author.query.all()
+    return authors_schema.dump(people)
 
 
 def create(author):
     id_author = author.get("id_author")
-    last_name = author.get("last_name", "")
-    first_name = author.get("first_name", "")
-    borne = author.get("borne", "")
-    died = author.get("died", "")
+    existing_person = Author.query.filter(Author.lname == id_author).one_or_none()
 
-    if id_author and id_author not in AUTHORS:
-        AUTHORS[id_author] = {
-            "id_author": id_author,
-            "last_name": last_name,
-            "first_name": first_name,
-            "borne": borne,
-            "died": died,
-            "create": get_timestamp(),
-        }
-        return AUTHORS[id_author], 201
+    if existing_person is None:
+        new_person = author_schema.load(author, session=db.session)
+        db.session.add(new_person)
+        db.session.commit()
+        return author_schema.dump(new_person), 201
     else:
         abort(
             406,
@@ -48,22 +26,26 @@ def create(author):
 
 
 def read_one(id_author):
-    if id_author in AUTHORS:
-        return AUTHORS[id_author]
+    person = Author.query.filter(Author.lname == id_author).one_or_none()
+
+    if person is not None:
+        return author_schema.dump(person)
     else:
-        abort(
-            404, f"Person with last name {id_author} not found"
-        )
+        abort(404, f"Person with last name {id_author} not found")
 
 
 def update(id_author, person):
-    if id_author in AUTHORS:
-        AUTHORS[id_author]["first_name"] = person.get("first_name", AUTHORS[id_author]["first_name"])
-        AUTHORS[id_author]["last_name"] = person.get("last_name", AUTHORS[id_author]["last_name"])
-        AUTHORS[id_author]["borne"] = person.get("borne", AUTHORS[id_author]["borne"])
-        AUTHORS[id_author]["died"] = person.get("died", AUTHORS[id_author]["died"])
-        AUTHORS[id_author]["create"] = get_timestamp()
-        return AUTHORS[id_author]
+    existing_person = Author.query.filter(Author.lname == id_author).one_or_none()
+
+    if existing_person:
+        update_person = author_schema.load(person, session=db.session)
+        existing_person.first_name = update_person.first_name
+        existing_person.last_name = update_person.last_name
+        existing_person.borne = update_person.borne
+        existing_person.died = update_person.died
+        db.session.merge(existing_person)
+        db.session.commit()
+        return author_schema.dump(existing_person), 201
     else:
         abort(
             404,
@@ -72,11 +54,12 @@ def update(id_author, person):
 
 
 def delete(id_author):
-    if id_author in AUTHORS:
-        del AUTHORS[id_author]
-        return make_response(
-            f"Author id:{id_author} successfully deleted", 200
-        )
+    existing_person = Author.query.filter(Author.lname == id_author).one_or_none()
+
+    if existing_person:
+        db.session.delete(existing_person)
+        db.session.commit()
+        return make_response(f"Author id:{id_author} successfully deleted", 200)
     else:
         abort(
             404,

@@ -5,6 +5,9 @@
 {% block main %}
     <main>
         <h1>Let`s Go!</h1>
+        {% for author in authors %}
+            <li>{{ author.first_name }} {{ author.last_name }}</li>
+        {% endfor %}
 
     </main>
 {% endblock %}
