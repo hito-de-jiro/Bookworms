@@ -5,8 +5,10 @@
 {% block main %}
     <main>
         <h1>Let`s Go!</h1>
-        {% for author in authors %}
+        {% for author in people %}
             <li>{{ author.first_name }} {{ author.last_name }}</li>
+            <li>Borne: {{ author.borne }}</li>
+            <li>Died: {{ author.died }}</li>
         {% endfor %}
 
     </main>

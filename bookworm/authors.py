@@ -5,19 +5,19 @@ from models import Author, author_schema, authors_schema
 
 
 def read_all():
-    people = Author.query.all()
-    return authors_schema.dump(people)
+    autors = Author.query.all()
+    return authors_schema.dump(autors)
 
 
 def create(author):
     id_author = author.get("id_author")
-    existing_person = Author.query.filter(Author.lname == id_author).one_or_none()
+    existing_author = Author.query.filter(Author.lname == id_author).one_or_none()
 
-    if existing_person is None:
-        new_person = author_schema.load(author, session=db.session)
-        db.session.add(new_person)
+    if existing_author is None:
+        new_author = author_schema.load(author, session=db.session)
+        db.session.add(new_author)
         db.session.commit()
-        return author_schema.dump(new_person), 201
+        return author_schema.dump(new_author), 201
     else:
         abort(
             406,

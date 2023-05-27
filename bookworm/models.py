@@ -4,14 +4,11 @@ from config import db, ma
 
 class Author(db.Model):
     __tablename__ = "author"
-    id = db.Column(db.Integer, primary_key=True)
+    id_author = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(45))
     last_name = db.Column(db.String(45))
     borne = db.Column(db.String(45))
     died = db.Column(db.String(45))
-    create = db.Column(
-        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
-    )
 
 
 class AuthorSchema(ma.SQLAlchemyAutoSchema):
