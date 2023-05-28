@@ -34,6 +34,14 @@ components:
       schema:
         type: "integer"
 
+    book_id:
+      name: "book_id"
+      description: "ID of the book"
+      in: path
+      required: true
+      schema:
+        type: "integer"
+
 paths:
 
   /authors:
@@ -102,3 +110,72 @@ paths:
       responses:
         "204":
           description: "Successfully deleted author"
+
+  /books:
+    post:
+      operationId: "books.create"
+      tags:
+        - Books
+      summary: "Create a note associated with a author"
+      requestBody:
+        description: "Book to create"
+        required: True
+        content:
+          application/json:
+            schema:
+              x-body-name: "book"
+              type: "object"
+              properties:
+                author_id:
+                  type: "integer"
+                content:
+                  type: "string"
+      responses:
+        "201":
+          description: "Successfully created a book"
+
+  /books/{book_id}:
+    get:
+      operationId: "books.read_one"
+      tags:
+        - Books
+      summary: "Read one book"
+      parameters:
+        - $ref: "#/components/parameters/book_id"
+      responses:
+        "200":
+          description: "Successfully read one book"
+
+    put:
+      tags:
+        - Books
+      operationId: "books.update"
+      summary: "Update a book"
+      parameters:
+        - $ref: "#/components/parameters/book_id"
+      responses:
+        "200":
+          description: "Successfully updated book"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              x-body-name: "book"
+              type: "object"
+              properties:
+                title:
+                  type: "string"
+                text:
+                  type: "string"
+                genre:
+                  type: "string"
+    delete:
+      tags:
+        - Books
+      operationId: "books.delete"
+      summary: "Delete a book"
+      parameters:
+        - $ref: "#/components/parameters/book_id"
+      responses:
+        "204":
+          description: "Successfully deleted book"

@@ -4,12 +4,20 @@
 
 {% block main %}
     <main>
-        <h1>Let`s Go!</h1>
-        {% for author in people %}
-            <li>{{ author.first_name }} {{ author.last_name }}</li>
-            <li>Borne: {{ author.borne }}</li>
-            <li>Died: {{ author.died }}</li>
-        {% endfor %}
-
+        <div class="container">
+            <h1>Let`s Go!</h1>
+            {% for author in authors %}
+                <h2>{{ author.first_name }} {{ author.last_name }}</h2>
+                <li>Borne: {{ author.borne }}</li>
+                <li>Died: {{ author.died }}</li>
+                <ul>
+                    {% for book in author.books %}
+                        <li>
+                            {{ book.title }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        </div>
     </main>
 {% endblock %}

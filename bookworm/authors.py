@@ -1,3 +1,5 @@
+# authors.py
+
 from flask import abort, make_response
 
 from config import db
@@ -5,13 +7,13 @@ from models import Author, author_schema, authors_schema
 
 
 def read_all():
-    autors = Author.query.all()
-    return authors_schema.dump(autors)
+    authors = Author.query.all()
+    return authors_schema.dump(authors)
 
 
 def create(author):
     id_author = author.get("id_author")
-    existing_author = Author.query.filter(Author.lname == id_author).one_or_none()
+    existing_author = Author.query.filter(Author.id_author == id_author).one_or_none()
 
     if existing_author is None:
         new_author = author_schema.load(author, session=db.session)
@@ -26,26 +28,26 @@ def create(author):
 
 
 def read_one(id_author):
-    person = Author.query.filter(Author.lname == id_author).one_or_none()
+    author = Author.query.filter(Author.id_author == id_author).one_or_none()
 
-    if person is not None:
-        return author_schema.dump(person)
+    if author is not None:
+        return author_schema.dump(author)
     else:
         abort(404, f"Person with last name {id_author} not found")
 
 
-def update(id_author, person):
-    existing_person = Author.query.filter(Author.lname == id_author).one_or_none()
+def update(id_author, author):
+    existing_author = Author.query.filter(Author.id_author == id_author).one_or_none()
 
-    if existing_person:
-        update_person = author_schema.load(person, session=db.session)
-        existing_person.first_name = update_person.first_name
-        existing_person.last_name = update_person.last_name
-        existing_person.borne = update_person.borne
-        existing_person.died = update_person.died
-        db.session.merge(existing_person)
+    if existing_author:
+        update_author = author_schema.load(author, session=db.session)
+        existing_author.first_name = update_author.first_name
+        existing_author.last_name = update_author.last_name
+        existing_author.borne = update_author.borne
+        existing_author.died = update_author.died
+        db.session.merge(existing_author)
         db.session.commit()
-        return author_schema.dump(existing_person), 201
+        return author_schema.dump(existing_author), 201
     else:
         abort(
             404,
@@ -54,10 +56,10 @@ def update(id_author, person):
 
 
 def delete(id_author):
-    existing_person = Author.query.filter(Author.lname == id_author).one_or_none()
+    existing_author = Author.query.filter(Author.id_author == id_author).one_or_none()
 
-    if existing_person:
-        db.session.delete(existing_person)
+    if existing_author:
+        db.session.delete(existing_author)
         db.session.commit()
         return make_response(f"Author id:{id_author} successfully deleted", 200)
     else:
