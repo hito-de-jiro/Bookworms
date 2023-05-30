@@ -30,7 +30,7 @@ components:
       name: "id_author"
       description: "Id of the author to get"
       in: path
-      required: True
+      required: true
       schema:
         type: "integer"
 
@@ -60,12 +60,12 @@ paths:
         - Authors
       summary: "Create a author"
       requestBody:
+        x-body-name: "author"
         description: "Author to create"
-        required: True
+        required: true
         content:
           application/json:
             schema:
-              x-body-name: "author"
               $ref: "#/components/schemas/Author"
       responses:
         "201":
@@ -94,10 +94,10 @@ paths:
         "200":
           description: "Successfully updated author"
       requestBody:
+        x-body-name: "author"
         content:
           application/json:
             schema:
-              x-body-name: "author"
               $ref: "#/components/schemas/Author"
 
     delete:
@@ -119,7 +119,7 @@ paths:
       summary: "Create a note associated with a author"
       requestBody:
         description: "Book to create"
-        required: True
+        required: true
         content:
           application/json:
             schema:
