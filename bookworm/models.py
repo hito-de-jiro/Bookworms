@@ -9,7 +9,7 @@ from config import db, ma
 
 class Book(db.Model):
     __tablename__ = "book"
-    id = db.Column(db.Integer, primary_key=True)
+    id_book = db.Column(db.Integer, primary_key=True)
     author_id = db.Column(db.Integer, db.ForeignKey("author.id_author"))
 
     title = db.Column(db.String(255), nullable=False)
@@ -55,5 +55,6 @@ class AuthorSchema(ma.SQLAlchemyAutoSchema):
 
 
 book_schema = BookSchema()
+books_schema = BookSchema(many=True)
 author_schema = AuthorSchema()
 authors_schema = AuthorSchema(many=True)

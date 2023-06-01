@@ -1,9 +1,10 @@
+-- MySQL Workbench Forward Engineering
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 -- -----------------------------------------------------
 -- Schema library
--- mysql -uroot -proot27
+-- mysql -u root -proot27
 -- source D:\Projects\bookworms\script.sql
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `library` DEFAULT CHARACTER SET utf8 ;
@@ -22,20 +23,21 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `library`.`books`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `library`.`books` (
-  `id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `library`.`book` (
+  `id_book` INT NOT NULL,
   `title` VARCHAR(45) NOT NULL,
   `text` LONGTEXT NOT NULL,
   `genre` VARCHAR(45) NOT NULL,
   `author_id` INT NOT NULL,
-  PRIMARY KEY (`id`, `author_id`),
+  PRIMARY KEY (`id_book`, `author_id`),
   INDEX `fk_books_author_idx` (`author_id` ASC) VISIBLE,
   CONSTRAINT `fk_books_author`
     FOREIGN KEY (`author_id`)
-    REFERENCES `mydb`.`author` (`id_author`)
-    ON DELETE NO ACTION
+    REFERENCES `library`.`author` (`id_author`)
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
