@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+    <main>
+        {% for author in authors %}
+            <h2>{{ author.first_name }} {{ author.last_name }}</h2>
+            <p>Borne: {{ author.borne }}</p>
+            <p>Died: {{ author.died }}</p>
+            <ul>
+                {% for book in author.books %}
+                    <li>
+                        {{ book.title }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                {% if authors.has_prev %}
+                    <li class="page-item"><a href="{{ url_for('home', page=authors.prev_num) }}"
+                                             class="page-link"></a></li>
+                {% else %}
+                    <li class="page-item disabled"><a href="#" class="page-link btn">Previous</a></li>
+                {% endif %}
+
+                {% for page in authors.iter_pages(left_edge=3, right_edge=3) %}
+                    {% if page %}
+
+                        {% if page==authors.page %}
+                            <li class="page-item active"><a href="{{ url_for('home', page=page) }}"
+                                                            class="page-link">{{ page }}</a></li>
+                        {% else %}
+                            <li class="page-item"><a href="{{ url_for('home', page=page) }}"
+                                                     class="page-link">{{ page }}</a></li>
+                        {% endif %}
+
+                    {% else %}
+                        <li class="page-item disabled"><a href="#" class="page-link">...</a></li>
+
+                    {% endif %}
+                {% endfor %}
+
+                {% if authors.has_next %}
+                    <li class="page-item"><a href="{{ url_for('home', page=authors.next_num) }}"
+                                             class="page-link btn"></a></li>
+                {% else %}
+                    <li class="page-item disabled"><a href="#" class="page-link">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+
+    </main>
+
+{% endblock %}
+
+<div class="bd-example">
+    <table class="table">
+        <thead class="table-light">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Handle</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+        </tr>
+        <tr>
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+        </tr>
+        <tr>
+            <th scope="row">3</th>
+            <td>Larry</td>
+            <td>the Bird</td>
+            <td>@twitter</td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td>Footer</td>
+            <td>Footer</td>
+            <td>Footer</td>
+            <td>Footer</td>
+        </tr>
+        </tfoot>
+    </table>
+</div>
