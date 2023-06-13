@@ -1,11 +1,15 @@
 # authors.py
 
-from flask import abort, make_response
+from flask import abort, make_response, Blueprint
 
 from config import db
 from models import Author, author_schema, authors_schema
 
+authors_bp = Blueprint('authors', __name__)
+author_bp = Blueprint('author', __name__)
 
+
+@authors_bp.route('/', methods=['GET'])
 def read_all():
     authors = Author.query.all()
     return authors_schema.dump(authors)
@@ -27,6 +31,7 @@ def create(author):
         )
 
 
+@author_bp.route('/author/<int:id_author>', methods=['GET'])
 def read_one(id_author):
     author = Author.query.filter(Author.id_author == id_author).one_or_none()
 
