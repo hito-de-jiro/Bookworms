@@ -1,11 +1,10 @@
 # app.py
 from config import app
 
-from authors import authors_bp, author_bp
+from authors import authors_bp
 
 
 app.register_blueprint(authors_bp, url_prefix='/authors')
-app.register_blueprint(author_bp, url_prefix='/author')
 
 
 if __name__ == "__main__":
