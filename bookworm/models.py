@@ -1,17 +1,14 @@
 # models.py
 
 from datetime import datetime
-
 from marshmallow_sqlalchemy import fields
-
 from config import db, ma
 
 
 class Book(db.Model):
     __tablename__ = "book"
-    id_book = db.Column(db.Integer, primary_key=True)
-    author_id = db.Column(db.Integer, db.ForeignKey("author.id_author"))
-
+    id = db.Column(db.Integer, primary_key=True)
+    author_id = db.Column(db.Integer, db.ForeignKey("author.id"))
     title = db.Column(db.String(255), nullable=False)
     text = db.Column(db.String(255), nullable=False)
     genre = db.Column(db.String(255), nullable=False)
@@ -30,11 +27,10 @@ class BookSchema(ma.SQLAlchemyAutoSchema):
 
 class Author(db.Model):
     __tablename__ = "author"
-    id_author = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(45))
     last_name = db.Column(db.String(45))
     borne = db.Column(db.String(45))
-    died = db.Column(db.String(45))
     books = db.relationship(
         Book,
         backref="author",

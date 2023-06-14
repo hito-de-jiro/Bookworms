@@ -1,5 +1,4 @@
 # books.py
-
 from flask import abort, make_response
 
 from config import db
@@ -17,7 +16,7 @@ def read_one(book_id):
     if book is not None:
         return book_schema.dump(book)
     else:
-        abort(404, f"Note with ID {book_id} not found")
+        abort(404, f"Book with ID {book_id} not found")
 
 
 def update(book_id, book):

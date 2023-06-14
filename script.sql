@@ -5,7 +5,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema library
 -- mysql -u root -proot27
--- source D:\Projects\bookworms\script.sql
+-- source D:\Projects\flask\bookworms\script.sql
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `library` DEFAULT CHARACTER SET utf8 ;
 USE `library` ;
@@ -13,27 +13,26 @@ USE `library` ;
 -- Table `library`.`author`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `library`.`author` (
-  `id_author` INT NOT NULL,
+  `id` INT NOT NULL,
   `first_name` VARCHAR(45) NOT NULL,
   `last_name` VARCHAR(45) NOT NULL,
   `borne` VARCHAR(45) NOT NULL,
-  `died` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id_author`))
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `library`.`books`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `library`.`book` (
-  `id_book` INT NOT NULL,
+  `id` INT NOT NULL,
   `title` VARCHAR(45) NOT NULL,
   `text` LONGTEXT NOT NULL,
   `genre` VARCHAR(45) NOT NULL,
   `author_id` INT NOT NULL,
-  PRIMARY KEY (`id_book`, `author_id`),
-  INDEX `fk_books_author_idx` (`author_id` ASC) VISIBLE,
+  PRIMARY KEY (`id`, `author_id`),
+  INDEX `fk_books_author_idx` (`id` ASC) VISIBLE,
   CONSTRAINT `fk_books_author`
     FOREIGN KEY (`author_id`)
-    REFERENCES `library`.`author` (`id_author`)
+    REFERENCES `library`.`author` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
