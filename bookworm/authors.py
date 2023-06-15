@@ -1,6 +1,7 @@
 # authors.py
+import pdb
 
-from flask import abort, make_response, Blueprint
+from flask import abort, make_response, Blueprint, request
 
 from build_database import PERSON
 from config import db
@@ -13,6 +14,20 @@ authors_bp = Blueprint('authors', __name__)
 def read_all():
     authors = Author.query.all()
     return authors_schema.dump(authors)
+
+
+@authors_bp.route('/authors/search', methods=['GET', 'POST'])
+def search():
+
+    if request.method == 'POST' and 'q' in request.args:
+        q = request.args.get('q')
+        searched = "%{}%".format(q)
+        authors = Author.query.filter(Author.last_name.like(searched)).all()
+        if not authors:
+            abort(404, "Information not found")
+        return authors_schema.dump(authors)
+    else:
+        abort(404, "Information not found")
 
 
 @authors_bp.route('/authors', methods=['POST'])

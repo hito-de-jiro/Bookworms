@@ -11,7 +11,7 @@ class Book(db.Model):
     __tablename__ = "book"
     id = db.Column(db.Integer, primary_key=True)
     author_id = db.Column(db.Integer, db.ForeignKey("author.id"))
-    title = db.Column(db.String(255), nullable=False)
+    title = db.Column(db.String(255), nullable=False)  # , unique=True
     text = db.Column(db.String(255), nullable=False)
     genre = db.Column(db.String(255), nullable=False)
     timestamp = db.Column(
