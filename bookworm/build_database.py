@@ -1,11 +1,25 @@
 # build_database.py
 
+from faker import Faker
 from lorem.text import TextLorem
 
 from config import app, db
 from models import Author, Book
 
-from faker import Faker
+PERSON = {
+    "borne": "1992-09-18",
+    "first_name": "Petro",
+    "last_name": "Pup"
+}
+
+ADD_BOOK = {
+    "author_id": 1,
+    "genre": "comics",
+    "text": "Amet eius sed. Porro ipsum. Ipsum dolor dolor. Ipsum amet. "
+            "Consectetur magnam voluptatem. Adipisci sed. Eius quiquia. "
+            "Consectetur aliquam.",
+    "title": "77 arrows in indian`s ass"
+}
 
 fake = Faker()
 lorem = TextLorem(srange=(2, 3))

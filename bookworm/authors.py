@@ -2,28 +2,21 @@
 
 from flask import abort, make_response, Blueprint
 
+from build_database import PERSON
 from config import db
 from models import Author, author_schema, authors_schema
 
 authors_bp = Blueprint('authors', __name__)
 
 
-@authors_bp.route('/', methods=['GET'])
+@authors_bp.route('/authors', methods=['GET'])
 def read_all():
     authors = Author.query.all()
     return authors_schema.dump(authors)
 
 
-person = {
-    "borne": "1992-09-18",
-    "first_name": "Petia",
-    "id": 101,
-    "last_name": "Pup"
-}
-
-
-@authors_bp.route('/', methods=['POST'])
-def create(author=person):
+@authors_bp.route('/authors', methods=['POST'])
+def create(author=PERSON):
     _id = author.get("id")
     existing_author = Author.query.filter(Author.id == _id).one_or_none()
 
@@ -39,7 +32,7 @@ def create(author=person):
         )
 
 
-@authors_bp.route('/<int:id_author>', methods=['GET'])
+@authors_bp.route('/authors/<int:id_author>', methods=['GET'])
 def read_one(id_author):
     author = Author.query.filter(Author.id == id_author).one_or_none()
 
@@ -49,8 +42,8 @@ def read_one(id_author):
         abort(404, f"Person with last name {id_author} not found")
 
 
-@authors_bp.route('/<int:id_author>', methods=['PUT'])
-def update(id_author, author=person):
+@authors_bp.route('/authors/<int:id_author>', methods=['PUT'])
+def update(id_author, author=PERSON):
     existing_author = Author.query.filter(Author.id == id_author).one_or_none()
 
     if existing_author:
@@ -68,7 +61,7 @@ def update(id_author, author=person):
         )
 
 
-@authors_bp.route('/<int:id_author>', methods=['DELETE'])
+@authors_bp.route('/authors/<int:id_author>', methods=['DELETE'])
 def delete(id_author):
     existing_author = Author.query.filter(Author.id == id_author).one_or_none()
 

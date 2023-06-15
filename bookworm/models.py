@@ -1,7 +1,9 @@
 # models.py
 
 from datetime import datetime
+
 from marshmallow_sqlalchemy import fields
+
 from config import db, ma
 
 
@@ -15,6 +17,9 @@ class Book(db.Model):
     timestamp = db.Column(
         db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
     )
+
+    def __repr__(self) -> str:
+        return f"Book: {self.title}, id: {self.id}"
 
 
 class BookSchema(ma.SQLAlchemyAutoSchema):
@@ -38,6 +43,9 @@ class Author(db.Model):
         single_parent=True,
         order_by="desc(Book.timestamp)"
     )
+
+    def __repr__(self) -> str:
+        return f"Book: {self.first_name} {self.last_name}, id: {self.id}"
 
 
 class AuthorSchema(ma.SQLAlchemyAutoSchema):
