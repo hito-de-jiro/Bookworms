@@ -1,43 +1,22 @@
 # authors.py
 
-from flask import abort, make_response, Blueprint, request
+from flask import abort, make_response, Blueprint
 
+from build_database import PERSON
 from config import db
 from models import Author, author_schema, authors_schema
 
 authors_bp = Blueprint('authors', __name__)
 
-# person = {
-#     "borne": "1992-09-18",
-#     "first_name": "Petia",
-#     "last_name": "Pup"
-# }
 
-person = {
-  "books": [],
-  "borne": "1992-09-18",
-  "first_name": "Jora",
-  "id": 1,
-  "last_name": "Mendel"
-}
-
-
-@authors_bp.route('/authors/search', methods=['POST'])
 @authors_bp.route('/authors', methods=['GET'])
 def read_all():
-    ROWS_PER_PAGE = 5
-    page = request.args.get('page', 1, type=int)
-    authors = Author.query.paginate(page=page, per_page=ROWS_PER_PAGE)
-    if request.method == 'POST' and 'tag' in request.form:
-        tag = request.form['tag']
-        search = "%{}%".format(tag)
-        authors = Author.query.filter(Author.last_name.like(search)).paginate(per_page=ROWS_PER_PAGE)
-        return authors_schema.dump(authors, tag=tag)
+    authors = Author.query.all()
     return authors_schema.dump(authors)
 
 
 @authors_bp.route('/authors', methods=['POST'])
-def create(author=person):
+def create(author=PERSON):
     _id = author.get("id")
     existing_author = Author.query.filter(Author.id == _id).one_or_none()
 
@@ -64,7 +43,7 @@ def read_one(id_author):
 
 
 @authors_bp.route('/authors/<int:id_author>', methods=['PUT'])
-def update(id_author, author=person):
+def update(id_author, author=PERSON):
     existing_author = Author.query.filter(Author.id == id_author).one_or_none()
 
     if existing_author:
