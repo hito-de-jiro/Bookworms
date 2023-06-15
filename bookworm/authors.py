@@ -1,7 +1,7 @@
 # authors.py
-import pdb
 
 from flask import abort, make_response, Blueprint, request
+from sqlalchemy import or_
 
 from build_database import PERSON
 from config import db
@@ -18,13 +18,12 @@ def read_all():
 
 @authors_bp.route('/authors/search', methods=['GET', 'POST'])
 def search():
-
     if request.method == 'POST' and 'q' in request.args:
         q = request.args.get('q')
         searched = "%{}%".format(q)
-        authors = Author.query.filter(Author.last_name.like(searched)).all()
+        authors = Author.query.filter(or_(Author.last_name.like(searched), Author.first_name.like(searched))).all()
         if not authors:
-            abort(404, "Information not found")
+            abort(404, "Information not found!")
         return authors_schema.dump(authors)
     else:
         abort(404, "Information not found")
