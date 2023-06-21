@@ -7,9 +7,15 @@ from config import app, db
 from models import Author, Book
 
 PERSON = {
-    "borne": "1992-09-18",
     "first_name": "Petro",
-    "last_name": "Pup"
+    "last_name": "Pup",
+    "borne": "1992-09-18",
+}
+
+UPDATE_AUTHOR = {
+    "first_name": "Jora",
+    "last_name": "Mendel",
+    "borne": "1992-09-18",  # dob
 }
 
 ADD_BOOK = {
@@ -28,7 +34,7 @@ with app.app_context():
     db.drop_all()
     db.create_all()
 
-    for _ in range(100):
+    for _ in range(50):
         new_person = Author(
             first_name=fake.first_name(),
             last_name=fake.first_name(),
