@@ -3,8 +3,7 @@
 from flask import abort, make_response, Blueprint, request
 from sqlalchemy import or_
 
-from build_database import PERSON
-from config import db
+from app import db
 from models import Author, author_schema, authors_schema
 
 authors_bp = Blueprint('authors', __name__)
@@ -30,7 +29,7 @@ def search():
 
 
 @authors_bp.route('/authors', methods=['POST'])
-def create(author=PERSON):
+def create(author):
     _id = author.get("id")
     existing_author = Author.query.filter(Author.id == _id).one_or_none()
 
@@ -57,7 +56,7 @@ def read_one(id_author):
 
 
 @authors_bp.route('/authors/<int:id_author>', methods=['PUT'])
-def update(id_author, author=PERSON):
+def update(id_author, author):
     existing_author = Author.query.filter(Author.id == id_author).one_or_none()
 
     if existing_author:

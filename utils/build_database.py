@@ -3,8 +3,8 @@
 from faker import Faker
 from lorem.text import TextLorem
 
-from config import app, db
-from models import Author, Book
+from bookworm.config import app, db
+from bookworm.models import Author, Book
 
 PERSON = {
     "borne": "1992-09-18",
