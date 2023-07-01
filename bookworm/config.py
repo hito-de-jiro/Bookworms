@@ -15,6 +15,7 @@ class Config(object):
 
 class DevelopmentConfig(Config):
     ENV = "development"
+    DEBUG = True
     DEVELOPMENT = True
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root27@localhost/library'  # connect database
     SQLALCHEMY_TRACK_MODIFICATIONS = False
