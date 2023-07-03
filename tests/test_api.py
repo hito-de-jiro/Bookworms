@@ -2,7 +2,7 @@ def test_add_new_author(client, init_database):
     path = "api/v1/authors"
     response = client.post(path,
                            json={
-                               "firs_name": "Alexandre",
+                               "first_name": "Alexandre",
                                "last_name": "Dumas",
                                "dob": "1802-07-24",
                                "books": []
