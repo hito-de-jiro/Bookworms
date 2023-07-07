@@ -3,7 +3,7 @@ from bookworm import config
 
 from bookworm.config import db
 from bookworm.app import app
-from bookworm.models import Author
+from bookworm.models.models import Author
 
 
 @pytest.fixture

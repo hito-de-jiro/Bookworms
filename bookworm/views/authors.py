@@ -3,8 +3,8 @@
 from flask import abort, make_response, Blueprint, request
 from sqlalchemy import or_
 
-from app import db
-from models import Author, author_schema, authors_schema
+from bookworm.app import db
+from bookworm.models.models import Author, author_schema, authors_schema
 
 authors_bp = Blueprint('authors', __name__)
 
@@ -15,12 +15,19 @@ def read_all():
     return authors_schema.dump(authors)
 
 
-@authors_bp.route('/authors/search', methods=['GET', 'POST'])
+@authors_bp.route('/authors/search', methods=['GET'])
 def search():
-    if request.method == 'POST' and 'q' in request.args:
+    if request.method == 'GET' and 'q' in request.args:
+
+        page = request.args.get('page', 1, type=int)
+        per_page = request.args.get('per_page', 5, type=int)
         q = request.args.get('q')
         searched = "%{}%".format(q)
-        authors = Author.query.filter(or_(Author.last_name.like(searched), Author.first_name.like(searched))).all()
+        authors = Author.query.filter(
+            or_(Author.last_name.like(searched), Author.first_name.like(searched))).paginate(page=page,
+                                                                                             per_page=per_page,
+                                                                                             error_out=False)
+
         if not authors:
             abort(404, "Information not found!")
         return authors_schema.dump(authors)

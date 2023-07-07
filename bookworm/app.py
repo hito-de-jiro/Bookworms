@@ -1,9 +1,11 @@
 # app.py
 
-from books import books_bp
-from bookworm import config
-from config import db, ma, migrate
 from flask import Flask
+
+from bookworm import config
+from bookworm.config import db, ma, migrate
+
+from bookworm.views.books import books_bp
 
 
 def create_app():
@@ -17,10 +19,9 @@ def create_app():
     return app
 
 
-if __name__ == '__main__':
-    app = create_app()
-
-    from authors import authors_bp
-    app.register_blueprint(authors_bp, url_prefix='/api/v1')
-    app.register_blueprint(books_bp, url_prefix='/api/v1')
-    app.run(port=5000)
+if __name__ == "__main__":
+    application = create_app()
+    from bookworm.views.authors import authors_bp
+    application.register_blueprint(authors_bp, url_prefix='/api/v1')
+    application.register_blueprint(books_bp, url_prefix='/api/v1')
+    application.run(port=5000)

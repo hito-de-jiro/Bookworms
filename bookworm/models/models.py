@@ -4,7 +4,7 @@ from datetime import datetime
 
 from marshmallow_sqlalchemy import fields
 
-from config import db, ma
+from bookworm.config import db, ma
 
 
 class Book(db.Model):
