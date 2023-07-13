@@ -32,7 +32,7 @@ with app.app_context():
     db.drop_all()
     db.create_all()
 
-    for _ in range(1000):
+    for _ in range(10):
         new_person = Author(
             first_name=fake.first_name(),
             last_name=fake.first_name(),

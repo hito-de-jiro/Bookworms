@@ -36,7 +36,8 @@ def search():
 
 
 @authors_bp.route('/authors', methods=['POST'])
-def create(author):
+def create():
+    author = request.get_json()
     _id = author.get("id")
     existing_author = Author.query.filter(Author.id == _id).one_or_none()
 
@@ -73,6 +74,8 @@ def update(id_author, author):
         existing_author.borne = update_author.borne
         db.session.merge(existing_author)
         db.session.commit()
+
+
         return author_schema.dump(existing_author), 201
     else:
         abort(
