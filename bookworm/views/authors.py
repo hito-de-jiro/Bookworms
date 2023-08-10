@@ -60,7 +60,7 @@ def read_one(id_author):
     if author is not None:
         return author_schema.dump(author)
     else:
-        abort(404, f"Person with last name {id_author} not found")
+        abort(404, f"Person with ID: {id_author} not found")
 
 
 @authors_bp.route('/authors/<int:id_author>', methods=['PUT'])
@@ -74,7 +74,6 @@ def update(id_author, author):
         existing_author.borne = update_author.borne
         db.session.merge(existing_author)
         db.session.commit()
-
 
         return author_schema.dump(existing_author), 201
     else:

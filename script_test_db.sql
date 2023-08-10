@@ -5,7 +5,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema library
 -- mysql -u root -proot27
--- source D:\Projects\flask\bookworms\script_test_db
+-- source D:\Projects\flask\bookworms\script_test_db.sql
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `test_library` DEFAULT CHARACTER SET utf8 ;
 USE `test_library` ;
