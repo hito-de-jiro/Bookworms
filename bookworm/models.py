@@ -1,11 +1,10 @@
 # models.py
 
-from flask_marshmallow import Marshmallow
-from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+
 from marshmallow_sqlalchemy import fields
 
-db = SQLAlchemy()
-ma = Marshmallow()
+from config import db, ma
 
 
 class Book(db.Model):
@@ -15,6 +14,9 @@ class Book(db.Model):
     title = db.Column(db.String(255), nullable=False)  # , unique=True
     text = db.Column(db.String(255), nullable=False)
     genre = db.Column(db.String(255), nullable=False)
+    timestamp = db.Column(
+        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+    )
 
     def __repr__(self) -> str:
         return f"Book: {self.title}, id: {self.id}"
@@ -39,10 +41,11 @@ class Author(db.Model):
         backref="author",
         cascade="all, delete, delete-orphan",
         single_parent=True,
+        order_by="desc(Book.timestamp)"
     )
 
     def __repr__(self) -> str:
-        return f"Author: {self.first_name} {self.last_name}, id: {self.id}"
+        return f"Book: {self.first_name} {self.last_name}, id: {self.id}"
 
 
 class AuthorSchema(ma.SQLAlchemyAutoSchema):

@@ -3,10 +3,8 @@
 from faker import Faker
 from lorem.text import TextLorem
 
-from bookworm.app import create_app
-from bookworm.config import db
-from bookworm.models.models import Author, Book
-
+from config import app, db
+from models import Author, Book
 
 PERSON = {
     "borne": "1992-09-18",
@@ -26,13 +24,11 @@ ADD_BOOK = {
 fake = Faker()
 lorem = TextLorem(srange=(2, 3))
 
-app = create_app()
-
 with app.app_context():
     db.drop_all()
     db.create_all()
 
-    for _ in range(10):
+    for _ in range(100):
         new_person = Author(
             first_name=fake.first_name(),
             last_name=fake.first_name(),
@@ -47,6 +43,3 @@ with app.app_context():
         )
         db.session.add(new_person)
     db.session.commit()
-
-print('The database has been created!')
-
