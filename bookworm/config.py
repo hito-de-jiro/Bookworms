@@ -9,18 +9,31 @@ ma = Marshmallow()
 
 
 class Config(object):
+    """
+    Base configuration class.
+
+    Contains default configuration settings
+     + configuration settings applicable to all environments.
+    """
+    # Default settings
     DEBUG = False
     TESTING = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root27@localhost/library'  # connect database
 
 
 class DevelopmentConfig(Config):
-    ENV = "development"
     DEBUG = True
-    DEVELOPMENT = True
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root27@localhost/library'  # connect database
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
-class TestingConfig(DevelopmentConfig):
+class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root27@localhost/test_library'  # connect database
+
+
+config = {
+   'development': DevelopmentConfig,
+   'testing': TestingConfig,
+
+   'default': DevelopmentConfig
+}
