@@ -19,4 +19,8 @@ def create_app():
     app.register_blueprint(authors_bp, url_prefix='/api/v1')
     app.register_blueprint(books_bp, url_prefix='/api/v1')
 
+    @app.route('/')
+    def hello():
+        return 'Hello, Dude!'
+
     return app
