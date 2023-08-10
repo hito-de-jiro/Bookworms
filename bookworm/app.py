@@ -3,7 +3,7 @@
 from flask import Flask
 
 from bookworm import config
-from bookworm.config import db, ma, migrate
+from bookworm.models.models import db, ma
 
 
 def create_app():
@@ -11,7 +11,6 @@ def create_app():
     app.config.from_object(config.DevelopmentConfig)
 
     db.init_app(app)
-    migrate.init_app(app, db)
     ma.init_app(app)
 
     from bookworm.views.authors import authors_bp

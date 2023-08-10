@@ -1,20 +1,6 @@
 # config.py
-from flask_marshmallow import Marshmallow
-from flask_migrate import Migrate
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
-migrate = Migrate()
-ma = Marshmallow()
-
 
 class Config(object):
-    """
-    Base configuration class.
-
-    Contains default configuration settings
-     + configuration settings applicable to all environments.
-    """
     # Default settings
     DEBUG = False
     TESTING = False
@@ -28,12 +14,12 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root27@localhost/test_library'  # connect database
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root27@localhost/test_library'  # connect test database
 
 
 config = {
-   'development': DevelopmentConfig,
-   'testing': TestingConfig,
+    'development': DevelopmentConfig,
+    'testing': TestingConfig,
 
-   'default': DevelopmentConfig
+    'default': DevelopmentConfig
 }
