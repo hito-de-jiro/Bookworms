@@ -2,9 +2,8 @@
 
 from flask import abort, make_response, Blueprint
 
-from build_database import ADD_BOOK
-from config import db
-from models import Book, Author, book_schema, books_schema
+from bookworm.config import db
+from bookworm.models.models import Book, Author, book_schema, books_schema
 
 books_bp = Blueprint('books', __name__)
 book_bp = Blueprint('book', __name__)
@@ -27,7 +26,7 @@ def read_one(book_id):
 
 
 @books_bp.route('/books', methods=['POST'])
-def create(book=ADD_BOOK):
+def create(book):
     author_id = book.get("author_id")
     author = Author.query.get(author_id)
     "TODO: fix double book creation"
@@ -41,7 +40,7 @@ def create(book=ADD_BOOK):
 
 
 @books_bp.route('/books/<int:book_id>', methods=['PUT'])
-def update(book_id, book=ADD_BOOK):
+def update(book_id, book):
     existing_book = Book.query.get(book_id)
 
     if existing_book:
