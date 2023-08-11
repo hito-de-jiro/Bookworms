@@ -1,5 +1,3 @@
-import json
-
 from bookworm.app import create_app
 from bookworm import config
 
