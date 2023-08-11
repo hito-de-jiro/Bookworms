@@ -13,7 +13,7 @@ USE `test_library` ;
 -- Table `test_library`.`author`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `test_library`.`author` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `first_name` VARCHAR(45) NOT NULL,
   `last_name` VARCHAR(45) NOT NULL,
   `borne` VARCHAR(45) NOT NULL,
@@ -23,7 +23,7 @@ ENGINE = InnoDB;
 -- Table `test_library`.`books`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `test_library`.`book` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(45) NOT NULL,
   `text` LONGTEXT NOT NULL,
   `genre` VARCHAR(45) NOT NULL,
