@@ -4,8 +4,7 @@ from faker import Faker
 from lorem.text import TextLorem
 
 from bookworm.app import create_app
-from bookworm.config import db
-from bookworm.models.models import Author, Book
+from bookworm.models.models import Author, Book, db
 
 
 PERSON = {

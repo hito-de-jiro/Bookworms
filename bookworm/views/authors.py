@@ -3,8 +3,7 @@
 from flask import abort, make_response, Blueprint, request
 from sqlalchemy import or_
 
-from bookworm.app import db
-from bookworm.models.models import Author, author_schema, authors_schema
+from bookworm.models.models import Author, author_schema, authors_schema, db
 
 authors_bp = Blueprint('authors', __name__)
 

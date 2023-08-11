@@ -2,8 +2,7 @@
 
 from flask import abort, make_response, Blueprint
 
-from bookworm.config import db
-from bookworm.models.models import Book, Author, book_schema, books_schema
+from bookworm.models.models import Book, Author, book_schema, books_schema, db
 
 books_bp = Blueprint('books', __name__)
 book_bp = Blueprint('book', __name__)
