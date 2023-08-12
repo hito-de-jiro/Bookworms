@@ -63,7 +63,8 @@ def read_one(id_author):
 
 
 @authors_bp.route('/authors/<int:id_author>', methods=['PUT'])
-def update(id_author, author):
+def update(id_author):
+    author = request.get_json()
     existing_author = Author.query.filter(Author.id == id_author).one_or_none()
 
     if existing_author:
