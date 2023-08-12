@@ -2,13 +2,13 @@
 
 from flask import Flask
 
-from bookworm import config
+from bookworm.config import DevelopmentConfig
 from bookworm.models.models import db, ma
 
 
-def create_app():
+def create_app(config=DevelopmentConfig):
     app = Flask(__name__)
-    app.config.from_object(config.DevelopmentConfig)
+    app.config.from_object(config)
 
     db.init_app(app)
     ma.init_app(app)
