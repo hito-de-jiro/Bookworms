@@ -1,7 +1,7 @@
 import pytest
 
-from bookworm.config import TestingConfig
 from bookworm.app import create_app
+from bookworm.config import TestingConfig
 from bookworm.models.models import Author, db
 
 

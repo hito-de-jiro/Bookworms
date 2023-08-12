@@ -1,39 +1,46 @@
 import json
 
-import pytest
+
+# @pytest.mark.skipif
+def test_hello_route(client):
+    response = client.get('/')
+    assert response.status_code == 200
+    assert response.data.decode('utf-8') == 'Hello, Dude!'
 
 
-@pytest.mark.skipif
+# @pytest.mark.skipif
 def test_read_all_authors(client, init_database):
     """test reading all authors"""
-    response = client.get('api/v1/authors')
-    assert response.status_code == 200
-
+    # Prepare
     expected_data = [
-        {"books": [], "borne": "1431-04-01", "first_name": "Francois", "id": 1, "last_name": "Villon"},
-        {"books": [], "borne": "1802-02-26", "first_name": "Victor", "id": 2, "last_name": "Hugo"},
-        {"books": [], "borne": "1564-04-26", "first_name": "William", "id": 3, "last_name": "Shakespeare"},
+        {"borne": "1431-04-01", "first_name": "Francois", "id": 1, "last_name": "Villon"},
+        {"borne": "1802-02-26", "first_name": "Victor", "id": 2, "last_name": "Hugo"},
+        {"borne": "1564-04-26", "first_name": "William", "id": 3, "last_name": "Shakespeare"},
     ]
-    print(response.json)
+
+    # Do work
+    response = client.get('api/v1/authors')
+
+    # Validate
+    assert response.status_code == 200
     assert response.json == expected_data
 
 
-@pytest.mark.skipif
+# @pytest.mark.skipif
 def test_read_one_author(client, init_database):
     """test reading one author"""
     response = client.get('api/v1/authors/1')
     assert response.status_code == 200
 
-    expected_data = {"books": [], "borne": "1431-04-01", "first_name": "Francois", "id": 1, "last_name": "Villon"}
+    expected_data = {"borne": "1431-04-01", "first_name": "Francois", "id": 1, "last_name": "Villon"}
 
-    print(response.json)
     assert response.json == expected_data
 
 
-@pytest.mark.skipif
+# @pytest.mark.skipif
 def test_add_new_author(client, init_database):
     """test create a new author"""
-    new_author = {"books": [], "borne": "1992-09-18", "first_name": "Jora", "id": 4, "last_name": "Mendel"}
+    new_author = {"borne": "1992-09-18", "first_name": "Jora", "id": 4, "last_name": "Mendel"}
 
     response = client.post('/api/v1/authors', json=new_author)
 
@@ -41,10 +48,10 @@ def test_add_new_author(client, init_database):
     assert json.loads(response.data) == new_author
 
 
-@pytest.mark.skipif
+# @pytest.mark.skipif
 def test_create_existing_author(client, init_database):
     """test create an existing author"""
-    author = {"books": [], "borne": "1431-04-01", "first_name": "Francois", "id": 1, "last_name": "Villon"}
+    author = {"borne": "1431-04-01", "first_name": "Francois", "id": 1, "last_name": "Villon"}
 
     response = client.post('/api/v1/authors', json=author)
     assert response.status_code == 406

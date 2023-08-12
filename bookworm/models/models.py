@@ -2,7 +2,6 @@
 
 from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
-from marshmallow_sqlalchemy import fields
 
 db = SQLAlchemy()
 ma = Marshmallow()
