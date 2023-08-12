@@ -50,9 +50,7 @@ class AuthorSchema(ma.SQLAlchemyAutoSchema):
         model = Author
         load_instance = True
         sqla_session = db.session
-        include_relationships = True
-
-    books = fields.Nested(BookSchema, many=True)
+        include_relationships = False
 
 
 book_schema = BookSchema()
