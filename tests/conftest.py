@@ -1,27 +1,26 @@
 import pytest
 
-from bookworm import config
+from bookworm.config import TestingConfig
 from bookworm.app import create_app
 from bookworm.models.models import Author, db
 
 
 @pytest.fixture
 def client():
-    app = create_app()
-    app.config.from_object(config.TestingConfig)
+    app = create_app(config=TestingConfig)
     with app.test_client() as client:
         with app.app_context():
             yield client
 
 
 @pytest.fixture
-def init_database():
+def init_database(client):
     db.create_all()
 
     test_authors = [
-        {"id": 1, "first_name": "Francois", "last_name": "Villon", "borne": "1431-04-01", "books": []},
-        {"id": 2, "first_name": "Victor", "last_name": "Hugo", "borne": "1802-02-26", "books": []},
-        {"id": 3, "first_name": "William", "last_name": "Shakespeare", "borne": "1564-04-26", "books": []},
+        {"id": 1, "first_name": "Francois", "last_name": "Villon", "borne": "1431-04-01"},
+        {"id": 2, "first_name": "Victor", "last_name": "Hugo", "borne": "1802-02-26"},
+        {"id": 3, "first_name": "William", "last_name": "Shakespeare", "borne": "1564-04-26"},
     ]
 
     def create_author_model(author):
