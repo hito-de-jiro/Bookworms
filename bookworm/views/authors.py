@@ -11,28 +11,22 @@ authors_bp = Blueprint('authors', __name__)
 @authors_bp.route('/authors', methods=['GET'])
 def read_all():
     authors = Author.query.all()
-    return authors_schema.dump(authors)
+    data = authors_schema.dump(authors)
 
-
-@authors_bp.route('/authors/search', methods=['GET'])
-def search():
-    if request.method == 'GET' and 'q' in request.args:
-
-        page = request.args.get('page', 1, type=int)
-        per_page = request.args.get('per_page', 5, type=int)
-        q = request.args.get('q')
-        searched = "%{}%".format(q)
-        authors = Author.query.filter(
-            or_(Author.last_name.like(searched), Author.first_name.like(searched))).paginate(page=page,
-                                                                                             per_page=per_page,
-                                                                                             error_out=False)
-        data = authors_schema.dump(authors)
-        if not data:
-            abort(404, "Information not found")
-        else:
-            return data, 200
-    else:
+    if not data:
         abort(404, "Information not found")
+    else:
+        return data, 200
+
+
+@authors_bp.route('/authors/<int:id_author>', methods=['GET'])
+def read_one(id_author):
+    author = Author.query.filter(Author.id == id_author).one_or_none()
+
+    if author is not None:
+        return author_schema.dump(author)
+    else:
+        abort(404, f"Author id:{id_author} not found")
 
 
 @authors_bp.route('/authors', methods=['POST'])
@@ -51,16 +45,6 @@ def create():
             406,
             f"Author id:{_id} already exists",
         )
-
-
-@authors_bp.route('/authors/<int:id_author>', methods=['GET'])
-def read_one(id_author):
-    author = Author.query.filter(Author.id == id_author).one_or_none()
-
-    if author is not None:
-        return author_schema.dump(author)
-    else:
-        abort(404, f"Author id:{id_author} not found")
 
 
 @authors_bp.route('/authors/<int:id_author>', methods=['PUT'])
@@ -97,3 +81,24 @@ def delete(id_author):
             404,
             f"Author id:{id_author} not found"
         )
+
+
+@authors_bp.route('/authors/search', methods=['GET'])
+def search():
+    if request.method == 'GET' and 'q' in request.args:
+
+        page = request.args.get('page', 1, type=int)
+        per_page = request.args.get('per_page', 5, type=int)
+        q = request.args.get('q')
+        searched = "%{}%".format(q)
+        authors = Author.query.filter(
+            or_(Author.last_name.like(searched), Author.first_name.like(searched))).paginate(page=page,
+                                                                                             per_page=per_page,
+                                                                                             error_out=False)
+        data = authors_schema.dump(authors)
+        if not data:
+            abort(404, "Information not found")
+        else:
+            return data, 200
+    else:
+        abort(404, "Information not found")

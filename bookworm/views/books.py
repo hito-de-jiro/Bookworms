@@ -5,13 +5,17 @@ from flask import abort, make_response, Blueprint, request
 from bookworm.models.models import Book, Author, book_schema, books_schema, db
 
 books_bp = Blueprint('books', __name__)
-book_bp = Blueprint('book', __name__)
 
 
 @books_bp.route('/books', methods=['GET'])
 def read_all():
     books = Book.query.all()
-    return books_schema.dump(books)
+    data = books_schema.dump(books)
+
+    if not data:
+        abort(404, "Information not found")
+    else:
+        return data, 200
 
 
 @books_bp.route('/books/<int:book_id>', methods=['GET'])
@@ -36,7 +40,7 @@ def create():
         db.session.commit()
         return book_schema.dump(new_book), 201
     else:
-        abort(404, f"Person not found for ID: {author_id}")
+        abort(404, f"Author for ID: {author_id}")
 
 
 @books_bp.route('/books/<int:book_id>', methods=['PUT'])
