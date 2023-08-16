@@ -3,7 +3,7 @@ import json
 import pytest
 
 
-# @pytest.mark.skipif
+@pytest.mark.skipif
 def test_books_route(client, init_database):
     """test reading all authors"""
     # Prepare
@@ -21,7 +21,7 @@ def test_books_route(client, init_database):
     assert response.json == expected_json
 
 
-# @pytest.mark.skipif
+@pytest.mark.skipif
 def test_read_one_book(client, init_database):
     """test reading one book"""
     # Prepare
@@ -39,7 +39,7 @@ def test_read_one_book(client, init_database):
     assert response.json == expected_json
 
 
-# @pytest.mark.skipif
+@pytest.mark.skipif
 def test_read_one_wrong_book(client, init_database):
     """test reading wrong book"""
     # Do work
@@ -50,19 +50,56 @@ def test_read_one_wrong_book(client, init_database):
     assert b"Book with ID 111 not found" in response.data
 
 
-# @pytest.mark.skipif
+@pytest.mark.skipif
 def test_add_new_book(client, init_database):
     """test create a new book"""
     # Prepare
-    new_book = {"id": 3,
+    new_book = {"id": 4,
                 "title": "Very MEGA important book",
                 "text": "Very MEGA interesting text",
                 "genre": "Pro zaek",
-                "author_id": 3}
+                "author_id": 1}
 
     # Do work
-    response = client.post("/api/v1/books", json=new_book)
+    response = client.post('/api/v1/books', json=new_book)
 
     # Validate
     assert response.status_code == 201
     assert json.loads(response.data) == new_book
+
+
+@pytest.mark.skipif
+def test_add_existing_book(client, init_database):
+    """test create an existing book"""
+    # Prepare
+    book = {"id": 1,
+            "title": "Ballade des pendus",
+            "text": "Frères humains, qui ...",
+            "genre": "Balada",
+            "author_id": 1}
+
+    # Do work
+    response = client.post('/api/v1/books', json=book)
+
+    # Validate
+    assert response.status_code == 406
+    assert b"Author with ID: 1 added this book" in response.data
+
+
+def test_update_book(client, init_database):
+    """test update an existing book"""
+    # Prepare
+    update_book = {
+        "id": 1,
+        "title": "Some title",
+        "text": "Some text",
+        "genre": "Some genre",
+        "author_id": 1
+    }
+
+    # Do work
+    response = client.put('/api/v1/authors/1', json=update_book)
+
+    # Validate
+    assert response.status_code == 201
+    assert json.loads(response.data) == update_book

@@ -9,6 +9,7 @@ books_bp = Blueprint('books', __name__)
 
 @books_bp.route('/books', methods=['GET'])
 def read_all():
+    """display all list books"""
     books = Book.query.all()
     data = books_schema.dump(books)
 
@@ -20,6 +21,7 @@ def read_all():
 
 @books_bp.route('/books/<int:book_id>', methods=['GET'])
 def read_one(book_id):
+    """display one book"""
     book = Book.query.get(book_id)
 
     if book is not None:
@@ -30,21 +32,26 @@ def read_one(book_id):
 
 @books_bp.route('/books', methods=['POST'])
 def create():
+    """create a new book"""
     book = request.get_json()
     author_id = book.get("author_id")
     author = Author.query.get(author_id)
+    title = book.get("title")
+    existing_book = Book.query.filter(Book.title == title).one_or_none()
+
     "TODO: fix double book creation"
-    if author:
+    if existing_book is None:
         new_book = book_schema.load(book, session=db.session)
         author.books.append(new_book)
         db.session.commit()
         return book_schema.dump(new_book), 201
     else:
-        abort(404, f"Author for ID: {author_id}")
+        abort(406, f"Author with ID: {author_id} added this book")
 
 
 @books_bp.route('/books/<int:book_id>', methods=['PUT'])
 def update(book_id):
+    """update book"""
     book = request.get_json()
     existing_book = Book.query.get(book_id)
 
@@ -62,6 +69,7 @@ def update(book_id):
 
 @books_bp.route('/books/<int:book_id>', methods=['DELETE'])
 def delete(book_id):
+    """delete book with spe"""
     existing_book = Book.query.get(book_id)
 
     if existing_book:

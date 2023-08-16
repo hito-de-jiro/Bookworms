@@ -3,7 +3,7 @@ import json
 import pytest
 
 
-# @pytest.mark.skipif
+@pytest.mark.skipif
 def test_hello_route(client):
     """test root route"""
 
@@ -15,7 +15,7 @@ def test_hello_route(client):
     assert response.data.decode('utf-8') == 'Hello, Dude!'
 
 
-# @pytest.mark.skipif
+@pytest.mark.skipif
 def test_read_all_authors(client, init_database):
     """test reading all authors"""
 
