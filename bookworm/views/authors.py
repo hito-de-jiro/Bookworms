@@ -26,10 +26,11 @@ def search():
             or_(Author.last_name.like(searched), Author.first_name.like(searched))).paginate(page=page,
                                                                                              per_page=per_page,
                                                                                              error_out=False)
-
-        if not authors:
-            abort(404, "Information not found!")
-        return authors_schema.dump(authors)
+        data = authors_schema.dump(authors)
+        if not data:
+            abort(404, "Information not found")
+        else:
+            return data, 200
     else:
         abort(404, "Information not found")
 
@@ -48,7 +49,7 @@ def create():
     else:
         abort(
             406,
-            f"Person with that data {_id} already exists",
+            f"Author id:{_id} already exists",
         )
 
 
@@ -59,7 +60,7 @@ def read_one(id_author):
     if author is not None:
         return author_schema.dump(author)
     else:
-        abort(404, f"Person with ID: {id_author} not found")
+        abort(404, f"Author id:{id_author} not found")
 
 
 @authors_bp.route('/authors/<int:id_author>', methods=['PUT'])
@@ -79,7 +80,7 @@ def update(id_author):
     else:
         abort(
             404,
-            f"Person with last name {id_author} not found"
+            f"Author id:{id_author} not found"
         )
 
 
@@ -94,5 +95,5 @@ def delete(id_author):
     else:
         abort(
             404,
-            f"Person with last name {id_author} not found"
+            f"Author id:{id_author} not found"
         )
