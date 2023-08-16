@@ -37,6 +37,7 @@ def init_database(client):
 
     mapped_authors = map(create_author_model, test_authors)
     t_authors = list(mapped_authors)
+
     mapped_books = map(create_book_model, test_books)
     t_books = list(mapped_books)
 

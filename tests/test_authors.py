@@ -1,9 +1,16 @@
 import json
 
+import pytest
+
 
 # @pytest.mark.skipif
 def test_hello_route(client):
+    """test root route"""
+
+    # Do work
     response = client.get('/')
+
+    # Validate
     assert response.status_code == 200
     assert response.data.decode('utf-8') == 'Hello, Dude!'
 
@@ -11,6 +18,7 @@ def test_hello_route(client):
 # @pytest.mark.skipif
 def test_read_all_authors(client, init_database):
     """test reading all authors"""
+
     # Prepare
     expected_json = [
         {"borne": "1431-04-01", "first_name": "Francois", "id": 1, "last_name": "Villon"},
@@ -26,7 +34,7 @@ def test_read_all_authors(client, init_database):
     assert response.json == expected_json
 
 
-# @pytest.mark.skipif
+@pytest.mark.skipif
 def test_read_one_author(client, init_database):
     """test reading one author"""
     # Prepare
@@ -40,7 +48,7 @@ def test_read_one_author(client, init_database):
     assert response.json == expected_json
 
 
-# @pytest.mark.skipif
+@pytest.mark.skipif
 def test_add_new_author(client, init_database):
     """test create a new author"""
     # Prepare
@@ -54,7 +62,7 @@ def test_add_new_author(client, init_database):
     assert json.loads(response.data) == new_author
 
 
-# @pytest.mark.skipif
+@pytest.mark.skipif
 def test_add_existing_author(client, init_database):
     """test create an existing author"""
     # Prepare
@@ -68,7 +76,7 @@ def test_add_existing_author(client, init_database):
     assert b"Author id:1 already exists" in response.data
 
 
-# @pytest.mark.skipif
+@pytest.mark.skipif
 def test_update_author(client, init_database):
     """test update an existing author"""
     # Prepare
@@ -82,7 +90,7 @@ def test_update_author(client, init_database):
     assert json.loads(response.data) == update_author
 
 
-# @pytest.mark.skipif
+@pytest.mark.skipif
 def test_update_wrong_author(client, init_database):
     """test delete an non-exist author"""
     # Do work
@@ -93,7 +101,7 @@ def test_update_wrong_author(client, init_database):
     assert b"Author id:111 not found" in response.data
 
 
-# @pytest.mark.skipif
+@pytest.mark.skipif
 def test_delete_author(client, init_database):
     """test delete an exist author"""
     # Do work
@@ -104,7 +112,7 @@ def test_delete_author(client, init_database):
     assert b"Author id:1 successfully deleted" in response.data
 
 
-# @pytest.mark.skipif
+@pytest.mark.skipif
 def test_delete_wrong_author(client, init_database):
     """test delete an non-exist author"""
     # Do work
@@ -115,7 +123,7 @@ def test_delete_wrong_author(client, init_database):
     assert b"Author id:111 not found" in response.data
 
 
-# @pytest.mark.skipif
+@pytest.mark.skipif
 def test_search(client, init_database):
     """test searching"""
     # Prepare
@@ -133,7 +141,7 @@ def test_search(client, init_database):
     assert response.json == expected_json
 
 
-# @pytest.mark.skipif
+@pytest.mark.skipif
 def test_wrong_search(client, init_database):
     """test wrong search"""
     # Prepare
