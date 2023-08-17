@@ -4,8 +4,6 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 -- -----------------------------------------------------
 -- Schema library
--- mysql -u root -proot27
--- source D:\Projects\flask\bookworms\script_test_db.sql
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `test_library` DEFAULT CHARACTER SET utf8 ;
 USE `test_library` ;
