@@ -1,22 +1,27 @@
 # books.py
 
-from flask import abort, make_response, Blueprint
+from flask import abort, make_response, Blueprint, request
 
-from bookworm.config import db
-from bookworm.models.models import Book, Author, book_schema, books_schema
+from bookworm.models.models import Book, Author, book_schema, books_schema, db
 
 books_bp = Blueprint('books', __name__)
-book_bp = Blueprint('book', __name__)
 
 
 @books_bp.route('/books', methods=['GET'])
 def read_all():
+    """display a list of all books"""
     books = Book.query.all()
-    return books_schema.dump(books)
+    data = books_schema.dump(books)
+
+    if not data:
+        abort(404, "Information not found")
+    else:
+        return data, 200
 
 
 @books_bp.route('/books/<int:book_id>', methods=['GET'])
 def read_one(book_id):
+    """display one book"""
     book = Book.query.get(book_id)
 
     if book is not None:
@@ -26,21 +31,28 @@ def read_one(book_id):
 
 
 @books_bp.route('/books', methods=['POST'])
-def create(book):
+def create():
+    """create a new book"""
+    book = request.get_json()
     author_id = book.get("author_id")
     author = Author.query.get(author_id)
-    "TODO: fix double book creation"
-    if author:
+    title = book.get("title")
+    existing_book = Book.query.filter(Book.title == title).one_or_none()
+
+    if existing_book is None:
         new_book = book_schema.load(book, session=db.session)
         author.books.append(new_book)
         db.session.commit()
-        return book_schema.dump(new_book), 201
+        data = book_schema.dump(new_book)
+        return data, 201
     else:
-        abort(404, f"Person not found for ID: {author_id}")
+        abort(406, f"Author with ID: {author_id} added this book")
 
 
 @books_bp.route('/books/<int:book_id>', methods=['PUT'])
-def update(book_id, book):
+def update(book_id):
+    """update book"""
+    book = request.get_json()
     existing_book = Book.query.get(book_id)
 
     if existing_book:
@@ -50,18 +62,20 @@ def update(book_id, book):
         existing_book.genre = update_book.genre
         db.session.merge(existing_book)
         db.session.commit()
-        return book_schema.dump(existing_book), 201
+        data = book_schema.dump(existing_book)
+        return data, 201
     else:
         abort(404, f"Note with ID {book_id} not found")
 
 
 @books_bp.route('/books/<int:book_id>', methods=['DELETE'])
 def delete(book_id):
+    """delete the book with the selected ID"""
     existing_book = Book.query.get(book_id)
 
     if existing_book:
         db.session.delete(existing_book)
         db.session.commit()
-        return make_response(f"{book_id} successfully deleted", 204)
+        return make_response(f"Book with ID:{book_id} successfully deleted", 200)
     else:
-        abort(404, f"Note with ID {book_id} not found")
+        abort(404, f"Book with ID:{book_id} not found")
