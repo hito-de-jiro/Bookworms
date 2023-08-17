@@ -9,7 +9,7 @@ books_bp = Blueprint('books', __name__)
 
 @books_bp.route('/books', methods=['GET'])
 def read_all():
-    """display all list books"""
+    """display a list of all books"""
     books = Book.query.all()
     data = books_schema.dump(books)
 
@@ -39,12 +39,12 @@ def create():
     title = book.get("title")
     existing_book = Book.query.filter(Book.title == title).one_or_none()
 
-    "TODO: fix double book creation"
     if existing_book is None:
         new_book = book_schema.load(book, session=db.session)
         author.books.append(new_book)
         db.session.commit()
-        return book_schema.dump(new_book), 201
+        data = book_schema.dump(new_book)
+        return data, 201
     else:
         abort(406, f"Author with ID: {author_id} added this book")
 
@@ -62,19 +62,20 @@ def update(book_id):
         existing_book.genre = update_book.genre
         db.session.merge(existing_book)
         db.session.commit()
-        return book_schema.dump(existing_book), 201
+        data = book_schema.dump(existing_book)
+        return data, 201
     else:
         abort(404, f"Note with ID {book_id} not found")
 
 
 @books_bp.route('/books/<int:book_id>', methods=['DELETE'])
 def delete(book_id):
-    """delete book with spe"""
+    """delete the book with the selected ID"""
     existing_book = Book.query.get(book_id)
 
     if existing_book:
         db.session.delete(existing_book)
         db.session.commit()
-        return make_response(f"{book_id} successfully deleted", 204)
+        return make_response(f"Book with ID:{book_id} successfully deleted", 200)
     else:
-        abort(404, f"Note with ID {book_id} not found")
+        abort(404, f"Book with ID:{book_id} not found")
