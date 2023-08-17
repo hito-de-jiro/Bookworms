@@ -10,6 +10,7 @@ authors_bp = Blueprint('authors', __name__)
 
 @authors_bp.route('/authors', methods=['GET'])
 def read_all():
+    """display a list of all authors"""
     authors = Author.query.all()
     data = authors_schema.dump(authors)
 
@@ -21,12 +22,13 @@ def read_all():
 
 @authors_bp.route('/authors/<int:id_author>', methods=['GET'])
 def read_one(id_author):
+    """display one author with the selected ID"""
     author = Author.query.filter(Author.id == id_author).one_or_none()
 
     if author is not None:
         return author_schema.dump(author)
     else:
-        abort(404, f"Author id:{id_author} not found")
+        abort(404, f"Author with ID:{id_author} not found")
 
 
 @authors_bp.route('/authors', methods=['POST'])
@@ -43,12 +45,13 @@ def create():
     else:
         abort(
             406,
-            f"Author id:{_id} already exists",
+            f"Author with ID:{_id} already exists",
         )
 
 
 @authors_bp.route('/authors/<int:id_author>', methods=['PUT'])
 def update(id_author):
+    """update author with the selected ID"""
     author = request.get_json()
     existing_author = Author.query.filter(Author.id == id_author).one_or_none()
 
@@ -64,27 +67,29 @@ def update(id_author):
     else:
         abort(
             404,
-            f"Author id:{id_author} not found"
+            f"Author with ID:{id_author} not found"
         )
 
 
 @authors_bp.route('/authors/<int:id_author>', methods=['DELETE'])
 def delete(id_author):
+    """delete author with the selected ID"""
     existing_author = Author.query.filter(Author.id == id_author).one_or_none()
 
     if existing_author:
         db.session.delete(existing_author)
         db.session.commit()
-        return make_response(f"Author id:{id_author} successfully deleted", 200)
+        return make_response(f"Author with ID:{id_author} successfully deleted", 200)
     else:
         abort(
             404,
-            f"Author id:{id_author} not found"
+            f"Author with ID:{id_author} not found"
         )
 
 
 @authors_bp.route('/authors/search', methods=['GET'])
 def search():
+    """search author"""
     if request.method == 'GET' and 'q' in request.args:
 
         page = request.args.get('page', 1, type=int)
