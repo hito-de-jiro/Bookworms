@@ -7,45 +7,35 @@ from bookworm.app import create_app
 from bookworm.models.models import Author, Book, db
 
 
-PERSON = {
-    "borne": "1992-09-18",
-    "first_name": "Petro",
-    "last_name": "Pup"
-}
+def db_builder():
+    """Create database with fake data"""
+    fake = Faker()
+    lorem = TextLorem(srange=(2, 3))
 
-ADD_BOOK = {
-    "author_id": 1,
-    "genre": "comics",
-    "text": "Amet eius sed. Porro ipsum. Ipsum dolor dolor. Ipsum amet. "
-            "Consectetur magnam voluptatem. Adipisci sed. Eius quiquia. "
-            "Consectetur aliquam.",
-    "title": "77 arrows in indian`s ass"
-}
+    app = create_app()
 
-fake = Faker()
-lorem = TextLorem(srange=(2, 3))
+    with app.app_context():
+        db.drop_all()
+        db.create_all()
 
-app = create_app()
-
-with app.app_context():
-    db.drop_all()
-    db.create_all()
-
-    for _ in range(10):
-        new_person = Author(
-            first_name=fake.first_name(),
-            last_name=fake.first_name(),
-            borne=fake.date_of_birth(),
-        )
-        new_person.books.append(
-            Book(
-                title=lorem.sentence(),
-                text=lorem.paragraph(),
-                genre=fake.word(),
+        for _ in range(10):  # Set range for num person in db
+            new_person = Author(
+                first_name=fake.first_name(),
+                last_name=fake.first_name(),
+                borne=fake.date_of_birth(),
             )
-        )
-        db.session.add(new_person)
-    db.session.commit()
+            new_person.books.append(
+                Book(
+                    title=lorem.sentence(),
+                    text=lorem.paragraph(),
+                    genre=fake.word(),
+                )
+            )
+            db.session.add(new_person)
+        db.session.commit()
 
-print('The database has been created!')
+
+if __name__ == "__main__":
+    db_builder()
+    print('The database has been created!')
 
