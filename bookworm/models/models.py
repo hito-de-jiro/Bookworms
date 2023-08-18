@@ -8,10 +8,9 @@ ma = Marshmallow()
 
 
 class Book(db.Model):
-    __tablename__ = "book"
     id = db.Column(db.Integer, primary_key=True)
     author_id = db.Column(db.Integer, db.ForeignKey("author.id"))
-    title = db.Column(db.String(255), nullable=False)  # , unique=True
+    title = db.Column(db.String(255), nullable=False)
     text = db.Column(db.String(255), nullable=False)
     genre = db.Column(db.String(255), nullable=False)
 
@@ -28,7 +27,6 @@ class BookSchema(ma.SQLAlchemyAutoSchema):
 
 
 class Author(db.Model):
-    __tablename__ = "author"
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(45))
     last_name = db.Column(db.String(45))
