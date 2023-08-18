@@ -7,7 +7,7 @@ from bookworm.app import create_app
 from bookworm.models.models import Author, Book, db
 
 
-def db_builder():
+def main():
     """Create database with fake data"""
     fake = Faker()
     lorem = TextLorem(srange=(2, 3))
@@ -36,6 +36,6 @@ def db_builder():
 
 
 if __name__ == "__main__":
-    db_builder()
+    main()
     print('The database has been created!')
 
