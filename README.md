@@ -4,7 +4,7 @@ Digital library educational project using REST API and MySQL
 --
 ## Stack
 - Python 3.10
-- MySQL 8.0
+- MySQL 8.0.33
 - Flask
 ## Copy project
 ```
@@ -30,7 +30,7 @@ pip install -r requirements.txt
 ```
 Use ready-made scripts to create a databases
 ```bash
-source yourabolutpathtoproject\bookworms\script.sql
+source yourabolutpathtoproject\resources\create_db.sql
 ```
 Run server:
 ```
@@ -47,7 +47,7 @@ You can choose any value in the range.
 The project have a tests of API endpoints.
 For tests, create a test database:
 ```bash
-source yourabolutpathtoproject\bookworms\script_test_db.sql
+source yourabolutpathtoproject\resources\create_test_db.sql
 ```
 Run tests:
 ```bash
