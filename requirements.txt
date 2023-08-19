@@ -1,6 +1,8 @@
 blinker==1.6.2
+cffi==1.15.1
 click==8.1.7
 colorama==0.4.6
+cryptography==41.0.3
 Faker==19.3.0
 Flask==2.3.2
 flask-marshmallow==0.15.0
@@ -15,6 +17,7 @@ marshmallow==3.20.1
 marshmallow-sqlalchemy==0.29.0
 packaging==23.1
 pluggy==1.2.0
+pycparser==2.21
 PyMySQL==1.1.0
 pytest==7.4.0
 python-dateutil==2.8.2
