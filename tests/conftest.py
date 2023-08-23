@@ -35,11 +35,8 @@ def init_database(client):
     def create_book_model(book):
         return Book(**book)
 
-    mapped_authors = map(create_author_model, test_authors)
-    t_authors = list(mapped_authors)
-
-    mapped_books = map(create_book_model, test_books)
-    t_books = list(mapped_books)
+    t_authors = list(map(create_author_model, test_authors))
+    t_books = list(map(create_book_model, test_books))
 
     db.session.add_all(t_authors)
     db.session.add_all(t_books)

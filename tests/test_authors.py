@@ -118,14 +118,16 @@ def test_delete_wrong_author(client, init_database):
 def test_search(client, init_database):
     """test searching"""
     # Prepare
-    searched = 'vi'
+    firstname = "Francois"
+    lastname= "Villon"
+
     expected_json = [
         {"borne": "1431-04-01", "first_name": "Francois", "id": 1, "last_name": "Villon"},
         {"borne": "1802-02-26", "first_name": "Victor", "id": 2, "last_name": "Hugo"},
     ]
 
     # Do work
-    response = client.get(f'/api/v1/authors/search?q={searched}&?page=2')
+    response = client.get(f'api/v1/authors/search?firstname={firstname}&lastname={lastname}')
 
     # Validate
     assert response.status_code == 200
@@ -135,8 +137,25 @@ def test_search(client, init_database):
 def test_wrong_search(client, init_database):
     """test wrong search"""
     # Prepare
-    searched = 'zz'
+    firstname = 'Isaak'
+    lastname = 'Kaz'
+
     # Do work
-    response = client.get(f'/api/v1/authors/search?q={searched}&?page=2')
+    response = client.get(f'/api/v1/authors/search?firstname={firstname}&lastname={lastname}')
+
+    # Validate
     assert response.status_code == 404
     assert b"Information not found" in response.data
+
+
+def test_pagination(client, init_database):
+    """test pagination"""
+    # Prepare
+    firstname = 'Isaak'
+    lastname = 'Kaz'
+
+    # Do work
+    response = client.get(f'/api/v1/authors/search?firstname={firstname}&lastname={lastname}&page=1&per_page=1')
+
+    # Validate
+    assert response.status_code == 200
