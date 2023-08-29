@@ -1,6 +1,6 @@
 # authors.py
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, make_response
 from sqlalchemy import or_
 
 from bookworm.models.models import Author, author_schema, authors_schema, db
@@ -54,10 +54,10 @@ def create():
     else:
         return jsonify(
             {
-                'code': '400',
-                'message': f"Author with ID:{_id} already exists",
+                'code': '409',
+                'message': f"Conflict. Author with ID:{_id} already exists",
             }
-        ), 400
+        ), 409
 
 
 @authors_bp.route('/authors/<int:id_author>', methods=['PUT'])
@@ -73,15 +73,14 @@ def update(id_author):
         existing_author.borne = update_author.borne
         db.session.merge(existing_author)
         db.session.commit()
-
         return author_schema.dump(existing_author), 200
     else:
-        return jsonify(
+        return make_response(jsonify(
             {
-                'code': '204',
-                'message': f"Author with ID:{id_author} not found",
-            }
-        ), 204
+                    'code': '204',
+                    'message': f"No content. Author with ID:{id_author} not found",
+                }
+        ))
 
 
 @authors_bp.route('/authors/<int:id_author>', methods=['DELETE'])
