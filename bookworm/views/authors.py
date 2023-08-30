@@ -1,6 +1,6 @@
 # authors.py
 
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, request, jsonify
 from sqlalchemy import or_
 
 from bookworm.models.models import Author, author_schema, authors_schema, db
@@ -75,12 +75,12 @@ def update(id_author):
         db.session.commit()
         return author_schema.dump(existing_author), 200
     else:
-        return make_response(jsonify(
+        return jsonify(
             {
-                    'code': '204',
-                    'message': f"No content. Author with ID:{id_author} not found",
-                }
-        ))
+                'code': '404',
+                'message': f"Author with ID:{id_author} not found",
+            }
+        ), 404
 
 
 @authors_bp.route('/authors/<int:id_author>', methods=['DELETE'])
@@ -96,14 +96,14 @@ def delete(id_author):
                 'Code': "200",
                 'message': f"Author with ID:{id_author} successfully deleted",
             }
-        )
+        ), 200
     else:
         return jsonify(
             {
                 'code': '404',
                 'message': f"Author with ID:{id_author} not found",
             }
-        )
+        ), 404
 
 
 @authors_bp.route('/authors/search', methods=['GET'])
