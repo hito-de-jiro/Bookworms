@@ -52,8 +52,12 @@ docker exec -it mysql-docker-container bash
 Check the database and create a database for tests:
 ```bash
 mysql -uroot -ppassw
-show databases;
-create database test_library;
+```
+```mysql
+SHOW DATABASES;
+```
+```mysql
+CREATE DATABASE test_library;
 ```
 Or use ready-made scripts to create databases:
 ```bash
