@@ -27,7 +27,7 @@ def test_read_all_authors(client, init_database):
         {"borne": "1802-02-26", "first_name": "Victor", "id": 2, "last_name": "Hugo"},
         {"borne": "1564-04-26", "first_name": "William", "id": 3, "last_name": "Shakespeare"},
     ]
-    update_authors(model=Author, data=expected_json)
+    update_authors(data=expected_json)
 
     # Do work
     response = client.get('api/v1/authors')
@@ -43,7 +43,7 @@ def test_read_one_author(client, init_database):
     expected_json = [
         {"borne": "1431-04-01", "first_name": "Francois", "id": 1, "last_name": "Villon"},
     ]
-    update_authors(model=Author, data=expected_json)
+    update_authors(data=expected_json)
 
     # Do work
     response = client.get('api/v1/authors/1')
@@ -76,7 +76,7 @@ def test_add_existing_author(client, init_database):
     author = [
         {"borne": "1431-04-01", "first_name": "Francois", "id": 1, "last_name": "Villon"},
     ]
-    update_authors(model=Author, data=author)
+    update_authors(data=author)
 
     # Do work
     response = client.post('/api/v1/authors', json=author[0])
@@ -92,7 +92,7 @@ def test_update_author(client, init_database):
     author = [
         {"borne": "1431-04-01", "first_name": "Francois", "id": 1, "last_name": "Villon"},
     ]
-    update_authors(model=Author, data=author)
+    update_authors(data=author)
     update_author = {"borne": "1041-07-27", "first_name": "Edward", "id": 1, "last_name": "de Bullon"}
 
     # Do work
@@ -108,14 +108,14 @@ def test_update_author(client, init_database):
 def test_update_wrong_author(client, init_database):
     """test delete an non-exist author"""
     # Prepare
-    update_author = {"borne": "1041-07-27", "first_name": "Edward", "id": 11, "last_name": "de Bullon"}
+    update_author = {"borne": "1041-07-27", "first_name": "Edward", "id": 1, "last_name": "de Bullon"}
 
     # Do work
-    response = client.put('/api/v1/authors/11', json=update_author)
+    response = client.put('/api/v1/authors/1', json=update_author)
 
     # Validate
     assert response.status_code == 404
-    assert "Author with ID:11 not found" in response.text
+    assert "Author with ID:1 not found" in response.text
 
 
 def test_delete_author(client, init_database):
@@ -124,7 +124,7 @@ def test_delete_author(client, init_database):
     author = [
         {"borne": "1431-04-01", "first_name": "Francois", "id": 1, "last_name": "Villon"},
     ]
-    update_authors(model=Author, data=author)
+    update_authors(data=author)
     # Do work
     response = client.delete('/api/v1/authors/1')
 
@@ -157,7 +157,7 @@ def test_search(client, init_database):
     expected_json = [
         {"borne": "1431-04-01", "first_name": "Francois", "id": 1, "last_name": "Villon"},
     ]
-    update_authors(model=Author, data=expected_json)
+    update_authors(data=expected_json)
 
     # Do work
     response = client.get(f'api/v1/authors/search?firstname={firstname}&lastname={lastname}')
@@ -194,7 +194,7 @@ def test_pagination(client, init_database):
         {"borne": "1872-12-06", "first_name": "Victor", "id": 4, "last_name": "Brumental"},
         {"borne": "1764-05-11", "first_name": "George", "id": 5, "last_name": "Pompidu"},
     ]
-    update_authors(model=Author, data=authors)
+    update_authors(data=authors)
 
     # Do work
     response_page_1 = client.get(f'/api/v1/authors/search?firstname={firstname}&lastname={lastname}&page=1&per_page=1')
