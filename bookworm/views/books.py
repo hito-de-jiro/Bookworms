@@ -27,7 +27,7 @@ def read_all():
 @books_bp.route('/books/<int:book_id>', methods=['GET'])
 def read_one(book_id):
     """display one book"""
-    book = Book.query.get(book_id)
+    book = db.session.get(Book, int(book_id))
 
     if book is not None:
         return book_schema.dump(book)
@@ -45,7 +45,7 @@ def create():
     """create a new book"""
     book = request.get_json()
     author_id = book.get("author_id")
-    author = Author.query.get(author_id)
+    author = db.session.get(Author, int(author_id))
     title = book.get("title")
     existing_book = Book.query.filter(Book.title == title).one_or_none()
 
@@ -68,7 +68,7 @@ def create():
 def update(book_id):
     """update book"""
     book = request.get_json()
-    existing_book = Book.query.get(book_id)
+    existing_book = db.session.get(Book, int(book_id))
 
     if existing_book:
         update_book = book_schema.load(book, session=db.session)
@@ -91,7 +91,7 @@ def update(book_id):
 @books_bp.route('/books/<int:book_id>', methods=['DELETE'])
 def delete(book_id):
     """delete the book with the selected ID"""
-    existing_book = Book.query.get(book_id)
+    existing_book = db.session.get(Book, int(book_id))
 
     if existing_book:
         db.session.delete(existing_book)
