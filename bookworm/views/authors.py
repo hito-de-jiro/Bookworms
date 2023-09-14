@@ -30,7 +30,7 @@ def read_one(id_author):
     author = Author.query.filter(Author.id == id_author).one_or_none()
 
     if author is not None:
-        return author_schema.dump(author)
+        return author_schema.dump(author), 200
     else:
         return jsonify(
             {
