@@ -1,6 +1,6 @@
 # books.py
 
-from flask import abort, make_response, Blueprint, request
+from flask import Blueprint, request, jsonify
 
 from bookworm.models.models import Book, Author, book_schema, books_schema, db
 
@@ -13,21 +13,31 @@ def read_all():
     books = Book.query.all()
     data = books_schema.dump(books)
 
-    if not data:
-        abort(404, "Information not found")
-    else:
+    if books is not None:
         return data, 200
+    else:
+        return jsonify(
+            {
+                "code": "404",
+                "message": "Information not found"
+            }
+        ), 404
 
 
 @books_bp.route('/books/<int:book_id>', methods=['GET'])
 def read_one(book_id):
     """display one book"""
-    book = Book.query.get(book_id)
+    book = db.session.get(Book, int(book_id))
 
     if book is not None:
         return book_schema.dump(book)
     else:
-        abort(404, f"Book with ID {book_id} not found")
+        return jsonify(
+            {
+                'code': '404',
+                'message': f"Book with ID:{book_id} does not exists",
+            }
+        ), 404
 
 
 @books_bp.route('/books', methods=['POST'])
@@ -35,7 +45,7 @@ def create():
     """create a new book"""
     book = request.get_json()
     author_id = book.get("author_id")
-    author = Author.query.get(author_id)
+    author = db.session.get(Author, int(author_id))
     title = book.get("title")
     existing_book = Book.query.filter(Book.title == title).one_or_none()
 
@@ -46,14 +56,19 @@ def create():
         data = book_schema.dump(new_book)
         return data, 201
     else:
-        abort(406, f"Author with ID: {author_id} added this book")
+        return jsonify(
+            {
+                'code': '409',
+                'message': f"Author with ID: {author_id} added this book",
+            }
+        ), 406
 
 
 @books_bp.route('/books/<int:book_id>', methods=['PUT'])
 def update(book_id):
     """update book"""
     book = request.get_json()
-    existing_book = Book.query.get(book_id)
+    existing_book = db.session.get(Book, int(book_id))
 
     if existing_book:
         update_book = book_schema.load(book, session=db.session)
@@ -65,17 +80,32 @@ def update(book_id):
         data = book_schema.dump(existing_book)
         return data, 201
     else:
-        abort(404, f"Note with ID {book_id} not found")
+        return jsonify(
+            {
+                'code': '404',
+                'message': f"Note with ID {book_id} not found",
+            }
+        ), 404
 
 
 @books_bp.route('/books/<int:book_id>', methods=['DELETE'])
 def delete(book_id):
     """delete the book with the selected ID"""
-    existing_book = Book.query.get(book_id)
+    existing_book = db.session.get(Book, int(book_id))
 
     if existing_book:
         db.session.delete(existing_book)
         db.session.commit()
-        return make_response(f"Book with ID:{book_id} successfully deleted", 200)
+        return jsonify(
+            {
+                'Code': "200",
+                'message': f"Book with ID:{book_id} successfully deleted",
+            }
+        ), 200
     else:
-        abort(404, f"Book with ID:{book_id} not found")
+        return jsonify(
+            {
+                'code': '404',
+                'message': f"Book with ID:{book_id} not found",
+            }
+        ), 404

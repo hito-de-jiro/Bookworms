@@ -11,6 +11,8 @@ def create_app(config=DevelopmentConfig):
     app.config.from_object(config)
 
     db.init_app(app)
+    with app.app_context():
+        db.create_all()
     ma.init_app(app)
 
     from bookworm.views.authors import authors_bp

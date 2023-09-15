@@ -1,6 +1,6 @@
 # authors.py
 
-from flask import abort, make_response, Blueprint, request
+from flask import Blueprint, request, jsonify
 from sqlalchemy import or_
 
 from bookworm.models.models import Author, author_schema, authors_schema, db
@@ -12,12 +12,16 @@ authors_bp = Blueprint('authors', __name__)
 def read_all():
     """display a list of all authors"""
     authors = Author.query.all()
-    data = authors_schema.dump(authors)
 
-    if not data:
-        abort(404, "Information not found")
+    if authors is not None:
+        return authors_schema.dump(authors), 200
     else:
-        return data, 200
+        return jsonify(
+            {
+                "code": "404",
+                "message": "Information not found"
+            }
+        ), 404
 
 
 @authors_bp.route('/authors/<int:id_author>', methods=['GET'])
@@ -26,9 +30,14 @@ def read_one(id_author):
     author = Author.query.filter(Author.id == id_author).one_or_none()
 
     if author is not None:
-        return author_schema.dump(author)
+        return author_schema.dump(author), 200
     else:
-        abort(404, f"Author with ID:{id_author} not found")
+        return jsonify(
+            {
+                'code': '404',
+                'message': f"Author with ID:{id_author} does not exists",
+            }
+        ), 404
 
 
 @authors_bp.route('/authors', methods=['POST'])
@@ -43,10 +52,12 @@ def create():
         db.session.commit()
         return author_schema.dump(new_author), 201
     else:
-        abort(
-            406,
-            f"Author with ID:{_id} already exists",
-        )
+        return jsonify(
+            {
+                'code': '409',
+                'message': f"Conflict. Author with ID:{_id} already exists",
+            }
+        ), 409
 
 
 @authors_bp.route('/authors/<int:id_author>', methods=['PUT'])
@@ -62,13 +73,14 @@ def update(id_author):
         existing_author.borne = update_author.borne
         db.session.merge(existing_author)
         db.session.commit()
-
-        return author_schema.dump(existing_author), 201
+        return author_schema.dump(existing_author), 200
     else:
-        abort(
-            404,
-            f"Author with ID:{id_author} not found"
-        )
+        return jsonify(
+            {
+                'code': '404',
+                'message': f"Author with ID:{id_author} not found",
+            }
+        ), 404
 
 
 @authors_bp.route('/authors/<int:id_author>', methods=['DELETE'])
@@ -79,31 +91,44 @@ def delete(id_author):
     if existing_author:
         db.session.delete(existing_author)
         db.session.commit()
-        return make_response(f"Author with ID:{id_author} successfully deleted", 200)
+        return jsonify(
+            {
+                'Code': "200",
+                'message': f"Author with ID:{id_author} successfully deleted",
+            }
+        ), 200
     else:
-        abort(
-            404,
-            f"Author with ID:{id_author} not found"
-        )
+        return jsonify(
+            {
+                'code': '404',
+                'message': f"Author with ID:{id_author} not found",
+            }
+        ), 404
 
 
 @authors_bp.route('/authors/search', methods=['GET'])
 def search():
-    """search author"""
-    if request.method == 'GET' and 'q' in request.args:
+    """search author with pagination"""
+    if request.method == 'GET' and ('firstname' or 'lastname') in request.args:
 
         page = request.args.get('page', 1, type=int)
         per_page = request.args.get('per_page', 5, type=int)
-        q = request.args.get('q')
-        searched = "%{}%".format(q)
+        firstname = request.args.get('firstname')
+        lastname = request.args.get('lastname')
+
+        f_name = "%{}%".format(firstname)
+        l_name = "%{}%".format(lastname)
         authors = Author.query.filter(
-            or_(Author.last_name.like(searched), Author.first_name.like(searched))).paginate(page=page,
-                                                                                             per_page=per_page,
-                                                                                             error_out=False)
-        data = authors_schema.dump(authors)
-        if not data:
-            abort(404, "Information not found")
+            or_(Author.last_name.like(l_name), Author.first_name.like(f_name))).paginate(page=page,
+                                                                                         per_page=per_page,
+                                                                                         error_out=False)
+        if not authors_schema.dump(authors):
+            return jsonify(
+                {
+                    'code': '404',
+                    'message': "Information not found",
+                }
+            ), 404
+
         else:
-            return data, 200
-    else:
-        abort(404, "Information not found")
+            return authors_schema.dump(authors), 200
