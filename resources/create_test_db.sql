@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `test_library`.`author` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 -- -----------------------------------------------------
--- Table `test_library`.`books`
+-- Table `test_library`.`book`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `test_library`.`book` (
   `id` INT NOT NULL AUTO_INCREMENT,
