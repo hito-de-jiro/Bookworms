@@ -1,6 +1,6 @@
 Bookworm
 ==
-Digital library pet project using REST API and MySQL
+REST API using Flask, MySQL, Docker.
 --
 ## Stack
 - Python 3.10
